@@ -1,0 +1,16 @@
+services:
+  # Database Service
+  db-project2:
+    image: postgres:17
+    container_name: mern-auth-project
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - '5433:5432'
+    volumes:
+      - mern_auth_pgdata:/var/lib/postgresql/data
+
+volumes:
+  mern_auth_pgdata:
