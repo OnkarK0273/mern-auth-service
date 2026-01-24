@@ -148,3 +148,4 @@ certs/
 
 # public folder
 public/
+/generated/prisma

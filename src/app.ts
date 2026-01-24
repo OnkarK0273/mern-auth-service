@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { config } from './config';
+import { Config } from './config';
 import logger from './config/logger';
 import { HttpError } from 'http-errors';
 
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.get('/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'UP', env: config.NODE_ENV });
+  res.status(200).json({ status: 'UP', env: Config.NODE_ENV });
 });
 
 // Global Error Handler
