@@ -16,6 +16,7 @@ export default defineConfig(
     rules: {
       'no-console': 'warn',
       'dot-notation': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
   {

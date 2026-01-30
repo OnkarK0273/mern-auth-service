@@ -7,7 +7,8 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   verbose: true,
-  roots: ['<rootDir>/src'],
+  // Add '<rootDir>/test' here (assuming your folder is named "test")
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
 };
 
 export default config;
