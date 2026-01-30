@@ -1,18 +1,20 @@
 import { TokenService } from '@/services/TokenService';
 import { Roles } from '../constants';
 import { UserService } from '../services/UserService';
-import { LoginUserRequest, RegisterUserRequest } from '../types';
-import { type Request, type Response, type NextFunction } from 'express';
+import { RegisterUserRequest } from '../types';
+import { type Response, type NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import { CredentialService } from '@/services/CredentialService';
 import createHttpError from 'http-errors';
+import { Logger } from 'winston';
 
 export class AuthController {
   constructor(
     private userService: UserService,
     private tokenService: TokenService,
     private credentialService: CredentialService,
+    private logger: Logger,
   ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
@@ -24,8 +26,17 @@ export class AuthController {
 
     const { firstName, lastName, email, password } = req.body;
 
+    this.logger.debug('New request to register a user', {
+      firstName,
+      lastName,
+      email,
+      password: '******',
+    });
+
     try {
       const user = await this.userService.create({ firstName, lastName, email, password, role: Roles.CUSTOMER });
+
+      this.logger.info('User has been registered', { id: user });
 
       const payload: JwtPayload = {
         sub: String(user.id),
@@ -63,7 +74,16 @@ export class AuthController {
   }
 
   async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
+    // validator
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
     const { email, password } = req.body;
+    this.logger.debug('New request to login a user', {
+      email,
+      password: '******',
+    });
 
     try {
       const user = await this.userService.findByEmailWithPassword(email);
@@ -110,7 +130,7 @@ export class AuthController {
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1y
         httpOnly: true, // Very important
       });
-
+      this.logger.info('User has been logged in', { id: user.id });
       res.json({ id: user.id });
     } catch (err) {
       next(err);
