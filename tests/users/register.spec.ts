@@ -285,4 +285,71 @@ describe('Auth register', () => {
       expect(users).toHaveLength(0);
     });
   });
+
+  describe('Fields are not in proper format', () => {
+    it('should trim the email field', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'onkar',
+        lastName: 'K',
+        email: ' onkar@email.com ',
+        password: 'password@123',
+      };
+      // Act
+      await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      const users = await prisma.user.findMany();
+      const user = users[0];
+      expect(user?.email).toBe('onkar@email.com');
+    });
+    it('should return 400 status code if email is not a valid email', async () => {
+      // arrange
+      const userData = {
+        firstName: 'onkar.k',
+        lastName: 'k',
+        email: 'onakr-k-t',
+        password: 'password@123@123',
+      };
+
+      // act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // assert
+      expect(response.statusCode).toBe(400);
+      const users = await prisma.user.findMany();
+      expect(users).toHaveLength(0);
+    });
+    it('should return 400 status code if password length is less than 8 chars', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'onkar',
+        lastName: 'K',
+        email: ' onkar@email.com ',
+        password: 'pass12',
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const users = await prisma.user.findMany();
+      expect(users).toHaveLength(0);
+    });
+    it('shoud return an array of error messages if email is missing', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'Rakesh',
+        lastName: 'K',
+        email: '',
+        password: 'password@123', // less than 8 chars
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      expect(response.body).toHaveProperty('errors');
+      expect((response.body as Record<string, string>).errors.length).toBeGreaterThan(0);
+    });
+  });
 });
