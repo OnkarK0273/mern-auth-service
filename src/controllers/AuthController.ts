@@ -1,7 +1,7 @@
 import { TokenService } from '@/services/TokenService';
 import { Roles } from '../constants';
 import { UserService } from '../services/UserService';
-import { RegisterUserRequest } from '../types';
+import { AuthRequest, RegisterUserRequest } from '../types';
 import { type Response, type NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
@@ -136,5 +136,11 @@ export class AuthController {
       next(err);
       return;
     }
+  }
+
+  async self(req: AuthRequest, res: Response) {
+    // token req.auth.id
+    const user = await this.userService.findById(Number(req.auth.sub));
+    res.json({ ...user, password: undefined });
   }
 }

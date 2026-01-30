@@ -8,6 +8,11 @@ import authRouter from './routes/auth.route';
 const app: Application = express();
 
 // Middlewares
+app.use(
+  express.static('public', {
+    dotfiles: 'allow', // This ensures folders like .well-known are accessible
+  }),
+);
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
