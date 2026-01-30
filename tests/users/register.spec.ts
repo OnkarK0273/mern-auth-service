@@ -1,7 +1,6 @@
 import app from '@/app';
 import { Roles } from '../../src/constants';
 import { prisma } from '@/lib/prisma';
-
 import request from 'supertest';
 import { isJwt } from '../utils/index';
 

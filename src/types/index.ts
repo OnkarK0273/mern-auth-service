@@ -12,3 +12,12 @@ export type UserData = {
 export interface RegisterUserRequest extends Request {
   body: UserData;
 }
+
+export type UserLoginData = {
+  email: string;
+  password: string;
+};
+
+export interface LoginUserRequest extends Request {
+  body: UserLoginData;
+}

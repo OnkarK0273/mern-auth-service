@@ -32,4 +32,20 @@ export class UserService {
       throw error;
     }
   }
+
+  async findByEmailWithPassword(email: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        password: true,
+      },
+    });
+  }
 }
