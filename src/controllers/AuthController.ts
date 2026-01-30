@@ -4,6 +4,7 @@ import { UserService } from '../services/UserService';
 import { RegisterUserRequest } from '../types';
 import { type Response, type NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 
 export class AuthController {
   constructor(
@@ -12,6 +13,12 @@ export class AuthController {
   ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
+    // validator
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
+
     const { firstName, lastName, email, password } = req.body;
     try {
       const user = await this.userService.create({ firstName, lastName, email, password, role: Roles.CUSTOMER });

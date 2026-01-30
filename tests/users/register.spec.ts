@@ -24,10 +24,10 @@ describe('Auth register', () => {
   describe('POST auth/register', () => {
     it('should return 201 status code', async () => {
       const userData = {
-        firstName: 'Onkar',
+        firstName: 'dev',
         lastName: 'k',
-        email: 'email.com',
-        password: 'password',
+        email: 'dev@email.com',
+        password: 'password@123',
       };
 
       const response = await request(app).post('/auth/register').send(userData);
@@ -40,9 +40,9 @@ describe('Auth register', () => {
 
       //1. A - arrange
       const userData = {
-        firstName: 'onkar',
+        firstName: 'dev',
         lastName: 'k',
-        email: 'onkar@email.com',
+        email: 'dev@email.com',
         password: 'password@123',
       };
 
@@ -102,9 +102,9 @@ describe('Auth register', () => {
     it('should assign a customer role', async () => {
       // Arrange
       const userData = {
-        firstName: 'Rakesh',
-        lastName: 'K',
-        email: 'rakesh@mern.space',
+        firstName: 'dev',
+        lastName: 'k',
+        email: 'dev@email.com',
         password: 'password@123',
       };
       // Act
@@ -119,9 +119,9 @@ describe('Auth register', () => {
     it('should store the hashed password in the database', async () => {
       // Arrange
       const userData = {
-        firstName: 'Rakesh',
-        lastName: 'K',
-        email: 'rakesh@mern.space',
+        firstName: 'dev',
+        lastName: 'k',
+        email: 'dev@email.com',
         password: 'password@123',
       };
       // Act
@@ -138,15 +138,14 @@ describe('Auth register', () => {
     it('should return 400 status code if email is already exists', async () => {
       // Arrange
       const userData = {
-        firstName: 'Rakesh',
-        lastName: 'K',
-        email: 'rakesh@mern.space',
-        password: 'secret',
-        role: Roles.CUSTOMER,
+        firstName: 'dev',
+        lastName: 'k',
+        email: 'dev@email.com',
+        password: 'password@123',
       };
 
       // Act
-      await prisma.user.create({ data: { ...userData } });
+      await prisma.user.create({ data: { ...userData, role: Roles.CUSTOMER } });
       const response = await request(app).post('/auth/register').send(userData);
       const users = await prisma.user.findMany();
       // Assert
@@ -157,10 +156,10 @@ describe('Auth register', () => {
     it('should return the access token and refresh token inside a cookie', async () => {
       // Arrange
       const userData = {
-        firstName: 'Rakesh',
-        lastName: 'K',
-        email: 'rakesh@mern.space',
-        password: 'password',
+        firstName: 'dev',
+        lastName: 'k',
+        email: 'dev@email.com',
+        password: 'password@123',
       };
 
       // Act
@@ -192,10 +191,10 @@ describe('Auth register', () => {
     it('should store the refresh token in the database', async () => {
       // Arrange
       const userData = {
-        firstName: 'Rakesh',
-        lastName: 'K',
-        email: 'rakesh@mern.space',
-        password: 'password',
+        firstName: 'dev',
+        lastName: 'k',
+        email: 'dev@email.com',
+        password: 'password@123',
       };
 
       // Act
@@ -211,6 +210,26 @@ describe('Auth register', () => {
       });
 
       expect(tokens).toHaveLength(1);
+    });
+  });
+
+  describe('fields are missing', () => {
+    it('should return 400 status code if email field is missing', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'onkar',
+        lastName: 'K',
+        email: '',
+        password: 'password@123',
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+
+      const users = await prisma.user.findMany();
+      expect(users).toHaveLength(0);
     });
   });
 });
