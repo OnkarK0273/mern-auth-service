@@ -1,11 +1,11 @@
-import { TokenService } from '@/services/TokenService';
+import { TokenService } from '../services/TokenService';
 import { Roles } from '../constants';
 import { UserService } from '../services/UserService';
 import { AuthRequest, RegisterUserRequest } from '../types';
 import { type Response, type NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { CredentialService } from '@/services/CredentialService';
+import { CredentialService } from '../services/CredentialService';
 import createHttpError from 'http-errors';
 import { Logger } from 'winston';
 

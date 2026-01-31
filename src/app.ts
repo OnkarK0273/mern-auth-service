@@ -1,5 +1,6 @@
 import express, { type Application, type Request, type Response, type NextFunction } from 'express';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { Config } from './config';
 import logger from './config/logger';
@@ -15,6 +16,7 @@ app.use(
 );
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

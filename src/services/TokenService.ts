@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import createHttpError from 'http-errors';
 import { Config } from '../config/index';
-import { UserData } from '@/types';
+import { UserData } from '../types';
 import { PrismaClient } from 'generated/prisma/client';
 export class TokenService {
   constructor(private prisma: PrismaClient) {}
