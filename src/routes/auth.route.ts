@@ -9,6 +9,7 @@ import logger from '../config/logger';
 import loginValidator from '../validators/login-validator';
 import authenticate from '../middlewares/authenticate';
 import { AuthRequest } from '../types';
+import validateRefreshToken from '../middlewares/validateRefreshToken';
 
 const router = express.Router();
 const userService = new UserService(prisma);
@@ -26,5 +27,11 @@ router
   .post(loginValidator, (req: Request, res: Response, next: NextFunction) => authController.login(req, res, next));
 
 router.route('/self').get(authenticate, (req: Request, res: Response) => authController.self(req as AuthRequest, res));
+
+router
+  .route('/refresh')
+  .post(validateRefreshToken, (req: Request, res: Response, next: NextFunction) =>
+    authController.refresh(req as AuthRequest, res, next),
+  );
 
 export default router;

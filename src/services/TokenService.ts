@@ -47,4 +47,12 @@ export class TokenService {
 
     return newRefreshToken;
   }
+
+  async deleteRefreshToken(tokenId: number) {
+    return await this.prisma.refreshToken.delete({
+      where: {
+        id: tokenId,
+      },
+    });
+  }
 }

@@ -25,3 +25,7 @@ export interface AuthCookie {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface IRefreshTokenPayload {
+  id: string;
+}
