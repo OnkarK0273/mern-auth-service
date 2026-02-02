@@ -6,6 +6,7 @@ import { Config } from './config';
 import logger from './config/logger';
 import { HttpError } from 'http-errors';
 import authRouter from './routes/auth.route';
+import tenantRoute from './routes/tenant.route';
 const app: Application = express();
 
 // Middlewares
@@ -27,6 +28,9 @@ app.get('/health', (req: Request, res: Response) => {
 
 // registration
 app.use('/auth', authRouter);
+
+// teant route
+app.use('/tenant', tenantRoute);
 
 // Global Error Handler
 app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
