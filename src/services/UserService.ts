@@ -1,4 +1,4 @@
-import { UserData } from '../types/index';
+import { UpdateUserData, UserData } from '../types/index';
 import { PrismaClient } from 'generated/prisma/client';
 import createHttpError from 'http-errors';
 import bcrypt from 'bcryptjs';
@@ -33,6 +33,19 @@ export class UserService {
     }
   }
 
+  async update(userId: number, userData: UpdateUserData) {
+    return this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: userData,
+    });
+  }
+
+  async get() {
+    return this.prisma.user.findMany();
+  }
+
   async findByEmailWithPassword(email: string) {
     return await this.prisma.user.findUnique({
       where: {
@@ -52,6 +65,14 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         id,
+      },
+    });
+  }
+
+  async deleteById(userId: number) {
+    return this.prisma.user.delete({
+      where: {
+        id: userId,
       },
     });
   }

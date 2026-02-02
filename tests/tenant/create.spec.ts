@@ -1,4 +1,5 @@
 import app from '@/app';
+import { Roles } from '@/constants';
 import { prisma } from '@/lib/prisma';
 import createJWKSMock from 'mock-jwks';
 import request from 'supertest';
@@ -14,6 +15,10 @@ describe('POST /tenants', () => {
   beforeEach(async () => {
     jwks?.start();
     await prisma.user.deleteMany();
+    adminToken = jwks.token({
+      sub: '1',
+      role: Roles.ADMIN,
+    });
   });
 
   afterEach(() => {

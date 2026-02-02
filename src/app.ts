@@ -7,6 +7,7 @@ import logger from './config/logger';
 import { HttpError } from 'http-errors';
 import authRouter from './routes/auth.route';
 import tenantRoute from './routes/tenant.route';
+import userRoute from './routes/user.route';
 const app: Application = express();
 
 // Middlewares
@@ -31,6 +32,9 @@ app.use('/auth', authRouter);
 
 // teant route
 app.use('/tenant', tenantRoute);
+
+// user route
+app.use('/user', userRoute);
 
 // Global Error Handler
 app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {

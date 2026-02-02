@@ -36,12 +36,12 @@ export class TokenService {
     return refreshToken;
   }
 
-  async persistRefreshToken(user: UserData) {
+  async persistRefreshToken(userId: number) {
     const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365; // 1Y
     const newRefreshToken = await this.prisma.refreshToken.create({
       data: {
         expiresAt: new Date(Date.now() + MS_IN_YEAR),
-        userId: user.id!,
+        userId: userId,
       },
     });
 

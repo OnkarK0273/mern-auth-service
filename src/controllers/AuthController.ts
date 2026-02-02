@@ -46,7 +46,7 @@ export class AuthController {
       const accessToken = this.tokenService.generateAccessToken(payload);
 
       // Persist the refresh token
-      const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+      const newRefreshToken = await this.tokenService.persistRefreshToken(user.id);
 
       const refreshToken = this.tokenService.generateRefreshToken({
         ...payload,
@@ -110,7 +110,7 @@ export class AuthController {
       const accessToken = this.tokenService.generateAccessToken(payload);
 
       // Persist the refresh token
-      const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+      const newRefreshToken = await this.tokenService.persistRefreshToken(user.id);
 
       const refreshToken = this.tokenService.generateRefreshToken({
         ...payload,
@@ -162,7 +162,7 @@ export class AuthController {
       }
 
       // Persist the refresh token
-      const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+      const newRefreshToken = await this.tokenService.persistRefreshToken(user.id);
 
       this.logger.info('persisting refreshtoken');
 

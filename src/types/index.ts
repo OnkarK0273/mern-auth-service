@@ -7,6 +7,13 @@ export type UserData = {
   email: string;
   password: string;
   role: string;
+  tenantId?: number;
+};
+
+export type UpdateUserData = {
+  firstName: string;
+  lastName: string;
+  role: string;
 };
 
 export interface RegisterUserRequest extends Request {
@@ -37,4 +44,12 @@ export type TenantData = {
 
 export interface CreateTenantRequest extends Request {
   body: TenantData;
+}
+
+export interface CreateUserRequest extends Request {
+  body: UserData;
+}
+
+export interface UpdateUserRequest extends Request {
+  body: UpdateUserData;
 }
