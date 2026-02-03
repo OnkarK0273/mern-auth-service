@@ -5,8 +5,18 @@ config({
   path: path.join(__dirname, `../../.env.${process.env.NODE_ENV || 'dev'}`),
 });
 
-const { PORT, NODE_ENV, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, REFRESH_TOKEN_SECRET, JWKS_URI } =
-  process.env;
+const {
+  PORT,
+  NODE_ENV,
+  DB_HOST,
+  DB_PORT,
+  DB_USERNAME,
+  DB_PASSWORD,
+  DB_NAME,
+  REFRESH_TOKEN_SECRET,
+  PRIVATE_KEY,
+  JWKS_URI,
+} = process.env;
 
 // 2. Explicitly type the Exported Config
 export const Config = {
@@ -19,5 +29,6 @@ export const Config = {
   DB_NAME,
   JWKS_URI,
   REFRESH_TOKEN_SECRET,
+  PRIVATE_KEY,
   DATABASE_URL: `postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public`,
 };
