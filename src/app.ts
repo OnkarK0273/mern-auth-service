@@ -22,7 +22,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'UP', env: Config.NODE_ENV });
 });

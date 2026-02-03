@@ -18,7 +18,6 @@ const {
   JWKS_URI,
 } = process.env;
 
-// 2. Explicitly type the Exported Config
 export const Config = {
   PORT,
   NODE_ENV,
