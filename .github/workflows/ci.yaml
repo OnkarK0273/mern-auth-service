@@ -33,7 +33,7 @@ jobs:
 
       # Tests connect directly to Supabase via Secrets
       - name: Test and coverage
-        run: pnpm run test:cov
+        run: pnpm run test
         env:
           DB_HOST: ${{ secrets.TEST_DB_HOST }}
           DB_PORT: ${{ secrets.TEST_DB_PORT }}
