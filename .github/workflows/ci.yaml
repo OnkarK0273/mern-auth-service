@@ -27,6 +27,9 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm exec prisma generate
+        env:
+          # A dummy value satisfies the config loader during the generate step
+          DATABASE_URL: 'postgresql://user:pass@localhost:5432/db'
 
       - name: Run eslint
         run: pnpm run lint
