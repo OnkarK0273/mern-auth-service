@@ -29,5 +29,5 @@ export const Config = {
   JWKS_URI,
   REFRESH_TOKEN_SECRET,
   PRIVATE_KEY,
-  DATABASE_URL: `postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public`,
+  DATABASE_URL: `postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?pgbouncer=true`,
 };
