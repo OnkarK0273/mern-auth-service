@@ -16,11 +16,16 @@ app.use(
     dotfiles: 'allow', // This ensures folders like .well-known are accessible
   }),
 );
-app.use(helmet());
-app.use(cors());
+// app.use(helmet());
+app.use(
+  cors({
+    origin: Config.CLIENT_ORIGIN_URL,
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'UP', env: Config.NODE_ENV });

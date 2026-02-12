@@ -16,6 +16,7 @@ const {
   REFRESH_TOKEN_SECRET,
   PRIVATE_KEY,
   JWKS_URI,
+  CLIENT_ORIGIN_URL,
 } = process.env;
 
 export const Config = {
@@ -29,5 +30,6 @@ export const Config = {
   JWKS_URI,
   REFRESH_TOKEN_SECRET,
   PRIVATE_KEY,
+  CLIENT_ORIGIN_URL,
   DATABASE_URL: `postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?pgbouncer=true`,
 };
