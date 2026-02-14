@@ -1,11 +1,11 @@
-import { UpdateUserData, UserData } from '../types/index';
+import { UpdateUserData, UserData, UserQueryParams } from '../types/index';
 import { PrismaClient } from 'generated/prisma/client';
 import createHttpError from 'http-errors';
 import bcrypt from 'bcryptjs';
 export class UserService {
   constructor(private prisma: PrismaClient) {}
 
-  async create({ firstName, lastName, email, password, role }: UserData) {
+  async create({ firstName, lastName, email, password, role, tenantId }: UserData) {
     // Note: Ensure 'email' is marked as @unique in your schema.prisma
     const user = await this.prisma.user.findUnique({ where: { email } });
 
@@ -25,6 +25,7 @@ export class UserService {
           email,
           password: hashedPassword,
           role,
+          tenantId: tenantId ?? null,
         },
       });
     } catch (err) {
@@ -42,8 +43,18 @@ export class UserService {
     });
   }
 
-  async get() {
-    return this.prisma.user.findMany();
+  async get(validatedQuery: UserQueryParams) {
+    const { currentPage, perPage } = validatedQuery;
+
+    const [users, totalCount] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        skip: (currentPage - 1) * perPage,
+        take: perPage,
+      }),
+      this.prisma.user.count(),
+    ]);
+
+    return [users, totalCount];
   }
 
   async findByEmailWithPassword(email: string) {
@@ -61,10 +72,12 @@ export class UserService {
       },
     });
   }
+
   async findById(id: number) {
     return await this.prisma.user.findUnique({
-      where: {
-        id,
+      where: { id },
+      include: {
+        tenant: true,
       },
     });
   }

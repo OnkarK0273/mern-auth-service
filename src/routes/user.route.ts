@@ -9,6 +9,7 @@ import { prisma } from '../lib/prisma';
 import { UserService } from '../services/UserService';
 import { CreateUserRequest } from '../types';
 import updateUserValidator from '../validators/update-user-validator';
+import listUsersValidator from '../validators/list-users-validator';
 
 const router = express.Router();
 
@@ -35,8 +36,11 @@ router
 
 router
   .route('/')
-  .get(authenticate, canAccess([Roles.ADMIN]), (req: CreateUserRequest, res: Response, next: NextFunction) =>
-    userController.getAll(req, res, next),
+  .get(
+    authenticate,
+    canAccess([Roles.ADMIN]),
+    listUsersValidator,
+    (req: CreateUserRequest, res: Response, next: NextFunction) => userController.getAll(req, res, next),
   );
 
 router
