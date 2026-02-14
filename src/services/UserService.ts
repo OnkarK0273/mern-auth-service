@@ -1,5 +1,5 @@
 import { UpdateUserData, UserData, UserQueryParams } from '../types/index';
-import { PrismaClient } from 'generated/prisma/client';
+import { Prisma, PrismaClient } from 'generated/prisma/client';
 import createHttpError from 'http-errors';
 import bcrypt from 'bcryptjs';
 export class UserService {
@@ -44,14 +44,46 @@ export class UserService {
   }
 
   async get(validatedQuery: UserQueryParams) {
-    const { currentPage, perPage } = validatedQuery;
+    const { currentPage, perPage, q, role } = validatedQuery;
+
+    // Build the where clause dynamically
+    const where: Prisma.UserWhereInput = {
+      AND: [],
+    };
+
+    // Handle Search (Name or Email)
+    if (q) {
+      const searchTerms = q.trim().split(/\s+/); // Splits "John Doe" into ["John", "Doe"]
+
+      (where.AND as Prisma.UserWhereInput[]).push({
+        OR: [
+          { email: { contains: q, mode: 'insensitive' } },
+          {
+            // Matches if BOTH parts appear across the name fields
+            AND: searchTerms.map((term) => ({
+              OR: [
+                { firstName: { contains: term, mode: 'insensitive' } },
+                { lastName: { contains: term, mode: 'insensitive' } },
+              ],
+            })),
+          },
+        ],
+      });
+    }
+
+    // Handle Role Filter
+    if (role) {
+      (where.AND as Prisma.UserWhereInput[]).push({ role });
+    }
 
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
+        where,
         skip: (currentPage - 1) * perPage,
         take: perPage,
+        orderBy: { id: 'desc' },
       }),
-      this.prisma.user.count(),
+      this.prisma.user.count({ where }),
     ]);
 
     return [users, totalCount];
