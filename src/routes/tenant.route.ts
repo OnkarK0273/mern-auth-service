@@ -15,7 +15,7 @@ const tenantController = new TenantController(tenantService, logger);
 
 router
   .route('/')
-  .post(authenticate, canAccess([Roles.CUSTOMER]), tenantValidator, (req: Request, res: Response, next: NextFunction) =>
+  .post(authenticate, canAccess([Roles.ADMIN]), tenantValidator, (req: Request, res: Response, next: NextFunction) =>
     tenantController.create(req, res, next),
   );
 
