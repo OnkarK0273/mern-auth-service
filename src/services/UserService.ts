@@ -79,6 +79,7 @@ export class UserService {
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
         where,
+        include: { tenant: true },
         skip: (currentPage - 1) * perPage,
         take: perPage,
         orderBy: { id: 'desc' },
