@@ -80,6 +80,7 @@ export class UserService {
       this.prisma.user.findMany({
         where,
         include: { tenant: true },
+        omit: { password: true },
         skip: (currentPage - 1) * perPage,
         take: perPage,
         orderBy: { id: 'desc' },

@@ -13,7 +13,9 @@ export type UserData = {
 export type UpdateUserData = {
   firstName: string;
   lastName: string;
+  email: string;
   role: string;
+  tenantId?: number;
 };
 
 export interface RegisterUserRequest extends Request {
