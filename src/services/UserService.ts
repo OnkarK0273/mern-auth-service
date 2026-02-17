@@ -34,12 +34,18 @@ export class UserService {
     }
   }
 
-  async update(userId: number, userData: UpdateUserData) {
+  async update(userId: number, { firstName, lastName, email, role, tenantId }: UpdateUserData) {
     return this.prisma.user.update({
       where: {
         id: userId,
       },
-      data: userData,
+      data: {
+        firstName,
+        lastName,
+        email,
+        role,
+        tenantId: tenantId,
+      },
     });
   }
 
