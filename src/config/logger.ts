@@ -13,12 +13,14 @@ const logger = winston.createLogger({
       filename: 'combined.log',
       level: 'info',
       silent: Config.NODE_ENV === 'test',
+      // silent: true,
     }),
     new winston.transports.File({
       dirname: 'logs',
       filename: 'error.log',
       level: 'error',
       silent: Config.NODE_ENV === 'test',
+      // silent: true,
     }),
     new winston.transports.Console({
       level: 'info',

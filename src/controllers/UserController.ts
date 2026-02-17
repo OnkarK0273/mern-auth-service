@@ -16,7 +16,7 @@ export class UserController {
     // validator
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(400).json({ errors: result.array() });
+      return next(createHttpError(400, result.array()[0].msg as string));
     }
 
     const { firstName, lastName, email, password, role, tenantId } = req.body;
@@ -41,7 +41,7 @@ export class UserController {
     // validator
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(400).json({ errors: result.array() });
+      return next(createHttpError(400, result.array()[0].msg as string));
     }
     const { firstName, lastName, role, email, tenantId } = req.body;
     const userId = req.params.id;

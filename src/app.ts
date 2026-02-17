@@ -3,11 +3,10 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { Config } from './config';
-import logger from './config/logger';
-import { HttpError } from 'http-errors';
 import authRouter from './routes/auth.route';
 import tenantRoute from './routes/tenant.route';
 import userRoute from './routes/user.route';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 const app: Application = express();
 
 // Middlewares
@@ -25,7 +24,8 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'UP', env: Config.NODE_ENV });
@@ -41,20 +41,6 @@ app.use('/tenant', tenantRoute);
 app.use('/user', userRoute);
 
 // Global Error Handler
-app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
-  logger.error(error.message);
-  const statusCode = error.statusCode || error.status || 500;
-
-  res.status(statusCode).json({
-    error: [
-      {
-        type: error.name,
-        msg: error.message,
-        path: '',
-        location: '',
-      },
-    ],
-  });
-});
+app.use(globalErrorHandler);
 
 export default app;

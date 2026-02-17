@@ -3,6 +3,7 @@ import { TenantService } from '../services/TenantService';
 import { type Response, type NextFunction, type Request } from 'express';
 import { Logger } from 'winston';
 import { matchedData, validationResult } from 'express-validator';
+import createHttpError from 'http-errors';
 export class TenantController {
   constructor(
     private tenantService: TenantService,
@@ -12,7 +13,7 @@ export class TenantController {
     // Validation
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(400).json({ errors: result.array() });
+      return next(createHttpError(400, result.array()[0].msg as string));
     }
 
     const { name, address } = req.body;
@@ -30,7 +31,7 @@ export class TenantController {
     // Validation
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(400).json({ errors: result.array() });
+      return next(createHttpError(400, result.array()[0].msg as string));
     }
 
     const { name, address } = req.body;
