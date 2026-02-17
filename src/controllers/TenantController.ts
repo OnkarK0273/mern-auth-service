@@ -1,8 +1,8 @@
-import { CreateTenantRequest } from '../types';
+import { CreateTenantRequest, TenantQueryParams } from '../types';
 import { TenantService } from '../services/TenantService';
-import { type Response, type NextFunction } from 'express';
+import { type Response, type NextFunction, type Request } from 'express';
 import { Logger } from 'winston';
-import { validationResult } from 'express-validator';
+import { matchedData, validationResult } from 'express-validator';
 export class TenantController {
   constructor(
     private tenantService: TenantService,
@@ -46,12 +46,18 @@ export class TenantController {
     }
   }
 
-  async getAll(req: CreateTenantRequest, res: Response, next: NextFunction) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    const validatedQuery = matchedData(req, { onlyValidData: true });
     this.logger.debug('Request for get all tenant');
     try {
-      const tenants = await this.tenantService.get();
+      const [tenants, totalCount] = await this.tenantService.get(validatedQuery as TenantQueryParams);
       this.logger.info('All tenant have been fetched');
-      res.json(tenants);
+      res.json({
+        currentPage: validatedQuery.currentPage as number,
+        perPage: validatedQuery.perPage as number,
+        total: totalCount,
+        data: tenants,
+      });
     } catch (error) {
       next(error);
     }

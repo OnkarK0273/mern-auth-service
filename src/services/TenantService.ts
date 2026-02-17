@@ -1,5 +1,5 @@
-import { TenantData } from '../types';
-import { PrismaClient } from 'generated/prisma/client';
+import { TenantData, TenantQueryParams } from '../types';
+import { Prisma, PrismaClient } from 'generated/prisma/client';
 
 export class TenantService {
   constructor(private prisma: PrismaClient) {}
@@ -17,8 +17,32 @@ export class TenantService {
     });
   }
 
-  async get() {
-    return this.prisma.tenant.findMany();
+  async get(validatedQuery: TenantQueryParams) {
+    const { currentPage, perPage, q } = validatedQuery;
+
+    // Initialize strictly typed where object
+    const where: Prisma.TenantWhereInput = {
+      AND: [],
+    };
+
+    // Handle Search (Name or Address if applicable)
+    if (q) {
+      (where.AND as Prisma.TenantWhereInput[]).push({
+        OR: [{ name: { contains: q, mode: 'insensitive' } }, { address: { contains: q, mode: 'insensitive' } }],
+      });
+    }
+
+    const [tenants, totalCount] = await this.prisma.$transaction([
+      this.prisma.tenant.findMany({
+        where,
+        skip: (currentPage - 1) * perPage,
+        take: perPage,
+        orderBy: { createdAt: 'desc' }, // Keeps newest tenants at the top
+      }),
+      this.prisma.tenant.count({ where }),
+    ]);
+
+    return [tenants, totalCount];
   }
 
   async getById(tenantId: number) {
